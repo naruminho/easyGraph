@@ -8,6 +8,8 @@ init_notebook_mode(connected=True)
 class EasyGraph:
     def __init__(self):
         self.G = nx.Graph()
+        self.vmin = 10e1000
+        self.vmax = -10e1000
 
     def __get_pos(self):
         self.pos = nx.circular_layout(self.G)
@@ -80,9 +82,8 @@ class EasyGraph:
         )
 
     def __set_colorbar(self):
-        vmax = 0
-        vmax = max([self.G.nodes[g]['valor'] for g in self.G.nodes if self.G.nodes[g]['valor'] > vmax])
-        norm = mpl.colors.Normalize(vmin=0, vmax=vmax)
+        self.vmax = max([self.G.nodes[g]['valor'] for g in self.G.nodes if self.G.nodes[g]['valor'] > self.vmax])
+        norm = mpl.colors.Normalize(vmin=self.vmin, vmax=self.vmax)
         cmap = cm.hot
         m = cm.ScalarMappable(norm=norm, cmap=cmap)
 
