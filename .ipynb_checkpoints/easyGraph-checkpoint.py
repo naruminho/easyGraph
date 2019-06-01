@@ -3,7 +3,6 @@ import matplotlib as mpl
 import matplotlib.cm as cm
 import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-
 init_notebook_mode(connected=True)
 
 class EasyGraph:
@@ -12,7 +11,7 @@ class EasyGraph:
         self.vmin = 10e1000
         self.vmax = -10e1000
 
-    def __set_pos(self):
+    def __get_pos(self):
         self.pos = nx.circular_layout(self.G)
         self.G.add_nodes_from([(k[0], {'pos':[k[1][0],k[1][1]]}) for k in self.pos.items()])
 
