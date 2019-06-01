@@ -1,4 +1,6 @@
 import networkx as nx
+import matplotlib as mpl
+import matplotlib.cm as cm
 import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 init_notebook_mode(connected=True)
@@ -6,6 +8,10 @@ init_notebook_mode(connected=True)
 class EasyGraph:
     def __init__(self):
         self.G = nx.Graph()
+
+    def __get_pos(self):
+        self.pos = nx.circular_layout(self.G)
+        self.G.add_nodes_from([(k[0], {'pos':[k[1][0],k[1][1]]}) for k in self.pos.items()])
 
     def __set_edge(self):
         self.edge_trace = go.Scatter(
@@ -74,16 +80,23 @@ class EasyGraph:
         )
 
     def __set_colorbar(self):
+        vmax = 0
+        vmax = max([self.G.nodes[g]['valor'] for g in self.G.nodes if self.G.nodes[g]['valor'] > vmax])
+        norm = mpl.colors.Normalize(vmin=0, vmax=vmax)
+        cmap = cm.hot
+        m = cm.ScalarMappable(norm=norm, cmap=cmap)
+
         for node, adjacencies in enumerate(self.G.adjacency()):
             self.node_trace['marker']['color'] =  m.to_rgba(self.G.nodes[list(self.G.nodes.keys())[node]]['valor'])
             node_info = 'R$ transferidos: '+str(self.G.nodes[list(self.G.nodes.keys())[node]]['valor'])
-            node_trace['text']+=tuple([node_info])
+            self.node_trace['text']+=tuple([node_info])
 
     def __plot(self):
         fig = go.Figure(data=[self.edge_trace, self.node_trace],layout=self.layout)
         iplot(fig, filename='networkx')
 
     def plot(self):
+        self.__get_pos()
         self.__set_edge()
         self.__set_node()
         self.__set_anotations()
