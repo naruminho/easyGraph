@@ -107,7 +107,7 @@ class EasyGraph:
             yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
         )
 
-    def __set_plot(self, field, ylabel=''):
+    def __set_plot(self, field, node_label=''):
         try:
             for g in self.G.nodes:
                 if self.G.nodes[g][field] < self.vmin:
@@ -123,18 +123,18 @@ class EasyGraph:
 
         for node, adjacencies in enumerate(self.G.adjacency()):
             self.node_trace['marker']['color'] =  m.to_rgba(self.G.nodes[list(self.G.nodes.keys())[node]][field])
-            node_info = ylabel + str(self.G.nodes[list(self.G.nodes.keys())[node]][field])
+            node_info = node_label +' '+ str(self.G.nodes[list(self.G.nodes.keys())[node]][field])
             self.node_trace['text']+=tuple([node_info])
 
     def __plot(self):
         fig = go.Figure(data=[self.edge_trace, self.node_trace],layout=self.layout)
         iplot(fig, filename='networkx')
 
-    def plot(self, field, title=' ', ylabel = '', label = ' '):
+    def plot(self, field, title=' ', node_label = '', label = ' '):
         self.__set_pos()
         self.__set_edge()
         self.__set_node(title)
         self.__set_anotations()
         self.__set_layout(title)
-        self.__set_plot(field, ylabel)
+        self.__set_plot(field, node_label)
         self.__plot()
