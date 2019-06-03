@@ -6,7 +6,7 @@ from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
 init_notebook_mode(connected=True)
 
-class EasyGraph:
+class EasyGraph:    
     def __init__(self):
         self.G = nx.Graph()
         self.vmin = 10e1000
