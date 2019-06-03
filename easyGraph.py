@@ -55,7 +55,13 @@ class EasyGraph:
             self.edge_trace['x'] += tuple([x0, x1, None])
             self.edge_trace['y'] += tuple([y0, y1, None])
 
-    def __set_node(self, title=''):
+    def __set_node(self, title='', col=None):
+        size = []
+        if col is not None:
+            for node in self.G.nodes:
+                size.append(self.G.nodes[node][col])
+        else:
+            size = [10]
         self.node_trace = go.Scatter(
             x=[],
             y=[],
@@ -67,7 +73,10 @@ class EasyGraph:
                 colorscale='YlGnBu',
                 reversescale=True,
                 color=[],
-                size=10,
+                size=size,
+                sizemode='area',
+                sizeref=2.*max(size)/(40.**2),
+                sizemin=10,
                 colorbar=dict(
                     thickness=15,
                     title=title,
@@ -130,10 +139,10 @@ class EasyGraph:
         fig = go.Figure(data=[self.edge_trace, self.node_trace],layout=self.layout)
         iplot(fig, filename='networkx')
 
-    def plot(self, field, title=' ', node_label = '', label = ' '):
+    def plot(self, field, title=' ', node_label = '', label = ' ', node_size_col=None):
         self.__set_pos()
         self.__set_edge()
-        self.__set_node(title)
+        self.__set_node(title, col=node_size_col)
         self.__set_anotations()
         self.__set_layout(title)
         self.__set_plot(field, node_label)
