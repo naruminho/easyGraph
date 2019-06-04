@@ -19,7 +19,7 @@ class EasyGraph:
            Add nodes to the graph.
            Params:
                node_name: node id
-               attributes (optional): dicionary with keys and its correspond values
+               attributes (optional): dicionary with keys and its corresponding values
         """
         self.G.add_node(node_name)
         if attributes is not None:
@@ -31,8 +31,8 @@ class EasyGraph:
            Add edges to the graph.
            Params:
                from_node: initial node
-               to_node: dest node
-               attributes (optional): dicionary with keys and its correspond values
+               to_node: destination node
+               attributes (optional): dicionary with keys and its corresponding values
         """
         self.G.add_edge(from_node, to_node)
         if attributes is not None:
@@ -146,10 +146,6 @@ class EasyGraph:
                     self.cmax = self.G.nodes[g][node_color_col]
         except:
             raise
-
-        # norm = mpl.colors.Normalize(vmin=self.vmin, vmax=self.vmax)
-        # cmap = cm.hot
-        # m = cm.ScalarMappable(norm=norm, cmap=cmap)
 
         for node, adjacencies in enumerate(self.G.adjacency()):
             if node_color_col is None:
