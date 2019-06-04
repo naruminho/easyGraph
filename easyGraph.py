@@ -92,6 +92,8 @@ class EasyGraph:
                 #colorscale='YlGnBu',
                 reversescale=True,
                 color=color,
+                cmax = self.cmax,
+                cmin = self.cmin,
                 size=size,
                 sizemode='area',
                 sizeref=sizeref,
