@@ -6,11 +6,13 @@ from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
 init_notebook_mode(connected=True)
 
-class EasyGraph:    
+class EasyGraph:
     def __init__(self):
         self.G = nx.Graph()
-        self.vmin = 10e1000
-        self.vmax = -10e1000
+        self.cmin = 10e1000
+        self.cmax = -10e1000
+        self.default_node_size = 10
+        self.default_node_color = 'darkblue'
 
     def add_node(self, node_name, attributes=None):
         """
@@ -55,13 +57,30 @@ class EasyGraph:
             self.edge_trace['x'] += tuple([x0, x1, None])
             self.edge_trace['y'] += tuple([y0, y1, None])
 
-    def __set_node(self, title='', col=None):
+    def __get_node_size_params(self, node_size_col):
         size = []
-        if col is not None:
+        if node_size_col is not None:
             for node in self.G.nodes:
-                size.append(self.G.nodes[node][col])
+                size.append(self.G.nodes[node][node_size_col])
+            sizeref = 2.*max(size)/(40.**2)
         else:
-            size = [10]
+            size = [1]*len(self.G.nodes)
+            sizeref = self.default_node_size
+        return size, sizeref
+
+    def __get_node_color_params(self, node_color_col):
+        color = []
+        if node_color_col is not None:
+            for node in self.G.nodes:
+                color.append(self.G.nodes[node][node_color_col])
+        else:
+            #color = [self.default_node_size]*len(self.G.nodes)
+            color = self.default_node_color
+        return color
+
+    def __set_node(self, title, node_size_col, node_color_col):
+        size, sizeref = self.__get_node_size_params(node_size_col)
+        color = self.__get_node_color_params(node_color_col)
         self.node_trace = go.Scatter(
             x=[],
             y=[],
@@ -69,14 +88,14 @@ class EasyGraph:
             mode='markers',
             hoverinfo='text',
             marker=dict(
-                showscale=True,
-                colorscale='YlGnBu',
+                #showscale=True,
+                #colorscale='YlGnBu',
                 reversescale=True,
-                color=[],
+                color=color,
                 size=size,
                 sizemode='area',
-                sizeref=2.*max(size)/(40.**2),
-                sizemin=10,
+                sizeref=sizeref,
+                sizemin=self.default_node_size,
                 colorbar=dict(
                     thickness=15,
                     title=title,
@@ -116,34 +135,38 @@ class EasyGraph:
             yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
         )
 
-    def __set_plot(self, field, node_label=''):
+    def __set_plot(self, node_color_col, node_label=''):
         try:
             for g in self.G.nodes:
-                if self.G.nodes[g][field] < self.vmin:
-                    self.vmin = self.G.nodes[g][field]
-                if self.G.nodes[g][field] > self.vmax:
-                    self.vmax = self.G.nodes[g][field]
+                if self.G.nodes[g][node_color_col] < self.cmin:
+                    self.cmin = self.G.nodes[g][node_color_col]
+                if self.G.nodes[g][node_color_col] > self.cmax:
+                    self.cmax = self.G.nodes[g][node_color_col]
         except:
             raise
 
-        norm = mpl.colors.Normalize(vmin=self.vmin, vmax=self.vmax)
-        cmap = cm.hot
-        m = cm.ScalarMappable(norm=norm, cmap=cmap)
+        # norm = mpl.colors.Normalize(vmin=self.vmin, vmax=self.vmax)
+        # cmap = cm.hot
+        # m = cm.ScalarMappable(norm=norm, cmap=cmap)
 
         for node, adjacencies in enumerate(self.G.adjacency()):
-            self.node_trace['marker']['color'] =  m.to_rgba(self.G.nodes[list(self.G.nodes.keys())[node]][field])
-            node_info = node_label +' '+ str(self.G.nodes[list(self.G.nodes.keys())[node]][field])
+            if node_color_col is None:
+                self.node_trace['marker']['color'] =  self.default_node_color
+            else:
+                self.node_trace['marker']['color'] =  self.G.nodes[list(self.G.nodes.keys())[node]][node_color_col]
+
+            node_info = node_label +' '+ str(self.G.nodes[list(self.G.nodes.keys())[node]][node_color_col])
             self.node_trace['text']+=tuple([node_info])
 
     def __plot(self):
         fig = go.Figure(data=[self.edge_trace, self.node_trace],layout=self.layout)
         iplot(fig, filename='networkx')
 
-    def plot(self, field, title=' ', node_label = '', label = ' ', node_size_col=None):
+    def plot(self, title=' ', node_label = '', label = ' ', node_size_col=None, node_color_col=None):
         self.__set_pos()
         self.__set_edge()
-        self.__set_node(title, col=node_size_col)
+        self.__set_node(title, node_size_col, node_color_col)
         self.__set_anotations()
         self.__set_layout(title)
-        self.__set_plot(field, node_label)
+        self.__set_plot(node_color_col, node_label)
         self.__plot()
