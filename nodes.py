@@ -25,18 +25,17 @@ class Node:
         self.G.add_nodes_from([(k[0], {'pos':[k[1][0],k[1][1]]}) for k in self.pos.items()])
 
     def get_size_params(self, node_size_col):
-        size = []
         if node_size_col is not None:
+            self.size = []
             for node in self.G.nodes:
-                size.append(self.G.nodes[node][node_size_col])
-            sizeref = 2.*max(size)/(40.**2)
+                self.size.append(self.G.nodes[node][node_size_col])
+            self.sizeref = 2.*max(size)/(40.**2)
         else:
-            size = [1]*len(self.G.nodes)
-            sizeref = self.size
-        return size, sizeref
+            self.size = [1]*len(self.G.nodes)
+            self.sizeref = self.size
 
     def set_node(self, title, node_size_col, node_color_col):
-        size, sizeref = self.get_size_params(node_size_col)
+        self.get_size_params(node_size_col)
         color = self.get_color_params(node_color_col)
         self.node_trace = go.Scatter(
             x=[],
@@ -50,12 +49,12 @@ class Node:
                 colorscale='Viridis',
                 reversescale=True,
                 color=color,
-                cmax = self.node.cmax,
-                cmin = self.node.cmin,
-                size=size,
+                cmax = self.cmax,
+                cmin = self.cmin,
+                size=self.size,
                 sizemode='area',
-                sizeref=sizeref,
-                sizemin=self.node.size,
+                sizeref=self.sizeref,
+                sizemin=self.size,
                 colorbar=dict(
                     thickness=15,
                     title=title,
