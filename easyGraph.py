@@ -11,35 +11,7 @@ class EasyGraph:
     def __init__(self):
         self.G = nx.Graph()
         self.node = Node(self.G)
-        self.edge = Edge()
-
-    def add_edge(self, from_node, to_node, attributes=None):
-        """
-           Add edges to the graph.
-           Params:
-               from_node: initial node
-               to_node: destination node
-               attributes (optional): dicionary with keys and its corresponding values
-        """
-        self.G.add_edge(from_node, to_node)
-        if attributes is not None:
-            for k, v in attributes.items():
-                self.G.edges[(from_node,to_node)][k]=v
-
-
-    def __set_edge(self):
-        self.edge_trace = go.Scatter(
-            x=[],
-            y=[],
-            line=dict(width=0.5,color='#888'),
-            hoverinfo='none',
-            mode='lines')
-
-        for edge in self.G.edges():
-            x0, y0 = self.G.node[edge[0]]['pos']
-            x1, y1 = self.G.node[edge[1]]['pos']
-            self.edge_trace['x'] += tuple([x0, x1, None])
-            self.edge_trace['y'] += tuple([y0, y1, None])
+        self.edge = Edge(self.G)
 
     def __set_anotations(self):
         self.annotations = []
@@ -93,12 +65,12 @@ class EasyGraph:
                 self.node.node_trace['text']+=tuple([node_info])
 
     def __plot(self):
-        fig = go.Figure(data=[self.edge_trace, self.node.node_trace],layout=self.layout)
+        fig = go.Figure(data=[self.edge.edge_trace, self.node.node_trace],layout=self.layout)
         iplot(fig, filename='networkx')
 
     def plot(self, title=' ', node_label = '', label = ' ', node_size_col=None, node_color_col=None):
         self.node.set_pos()
-        self.__set_edge()
+        self.edge.set_edge()
         self.node.set_node(title, node_size_col, node_color_col)
         self.__set_anotations()
         self.__set_layout(title)
