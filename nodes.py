@@ -32,7 +32,7 @@ class Node:
             self.size = []
             for node in self.G.nodes:
                 self.size.append(self.G.nodes[node][node_size_col])
-            self.sizeref = 2.*max(size)/(40.**2)
+            self.sizeref = 2.*max(self.size)/(40.**2)
         else:
             self.size = [1]*len(self.G.nodes)
             self.sizeref = self.sizemin
@@ -51,7 +51,7 @@ class Node:
         self.get_size_params(node_size_col)
         print(self.size)
         color = self.get_color_params(node_color_col)
-        self.node_trace = go.Scatter(
+        self.settings = go.Scatter(
             x=[],
             y=[],
             text=[],
@@ -76,3 +76,35 @@ class Node:
                     titleside='right'
                 ),
                 line=dict(width=2)))
+
+
+    def set_anotations(self):
+        self.annotations = []
+        for node in self.G.nodes():
+            x, y = self.G.node[node]['pos']
+            self.settings['x'] += tuple([x])
+            self.settings['y'] += tuple([y])
+            self.annotations.append(
+                dict(
+                    x=x,
+                    y=y+0.10,
+                    xref='x',
+                    yref='y',
+                    text=node,
+                    showarrow=False,
+                    ax=0,
+                    ay=20
+                )
+            )
+
+    def set_layout(self, title=''):
+        self.layout = go.Layout(
+            showlegend=False,
+            annotations=self.annotations,
+            title=title,
+            titlefont=dict(size=16),
+            hovermode='closest',
+            margin=dict(b=20,l=5,r=5,t=40),
+            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
+        )

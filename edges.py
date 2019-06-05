@@ -5,7 +5,6 @@ class Edge:
     def __init__(self, G):
         self.G = G
 
-
     def add(self, from_node, to_node, attributes=None):
         """
            Add edges to the graph.
@@ -20,7 +19,7 @@ class Edge:
                 self.G.edges[(from_node,to_node)][k]=v
 
     def set_edge(self):
-        self.edge_trace = go.Scatter(
+        self.settings = go.Scatter(
             x=[],
             y=[],
             line=dict(width=0.5,color='#888'),
@@ -30,5 +29,5 @@ class Edge:
         for edge in self.G.edges():
             x0, y0 = self.G.node[edge[0]]['pos']
             x1, y1 = self.G.node[edge[1]]['pos']
-            self.edge_trace['x'] += tuple([x0, x1, None])
-            self.edge_trace['y'] += tuple([y0, y1, None])
+            self.settings['x'] += tuple([x0, x1, None])
+            self.settings['y'] += tuple([y0, y1, None])
