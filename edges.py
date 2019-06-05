@@ -4,6 +4,7 @@ import plotly.graph_objs as go
 class Edge:
     def __init__(self, G):
         self.G = G
+        self.default_color = 'black'
 
     def add(self, from_node, to_node, attributes=None):
         """
@@ -18,13 +19,24 @@ class Edge:
             for k, v in attributes.items():
                 self.G.edges[(from_node,to_node)][k]=v
 
-    def set_edge(self):
+    # def get_color_params(self, color_col):
+    #     if color_col is None:
+    #         color = self.default_color
+    #     else:
+    #         color = []
+    #         for edge in self.G.edges:
+    #             #color.append(self.G.edges[edge][color_col])
+    #             color.append('black')
+    #     return color
+
+    def set_color_attribute(self, color_col):
+
         self.settings = go.Scatter(
             x=[],
             y=[],
             line=dict(
                 width=0.5,
-                color='#888'
+                color=self.default_color,
             ),
             hoverinfo='none',
             mode='lines'

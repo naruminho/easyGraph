@@ -11,7 +11,7 @@ class Node:
         self.cmax = -10e1000
         self.show_scale = False
         self.default_color = 'darkblue'
-
+    
     def add(self, name, attributes=None):
         """
            Add nodes to the graph.
