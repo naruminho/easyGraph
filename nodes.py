@@ -1,12 +1,15 @@
 import networkx as nx
+import plotly.graph_objs as go
 
 class Node:
     def __init__(self, G):
         self.G = G
         self.size = 10
+        self.sizemin = self.size
         self.default_color = 'darkblue'
         self.cmin = 10e1000
         self.cmax = -10e1000
+        self.show_scale = False
 
     def add_node(self, name, attributes=None):
         """
@@ -32,10 +35,21 @@ class Node:
             self.sizeref = 2.*max(size)/(40.**2)
         else:
             self.size = [1]*len(self.G.nodes)
-            self.sizeref = self.size
+            self.sizeref = self.sizemin
+
+    def get_color_params(self, node_color_col):
+        color = []
+        if node_color_col is not None:
+            for node in self.G.nodes:
+                color.append(self.G.nodes[node][node_color_col])
+        else:
+            #color = [self.default_node_size]*len(self.G.nodes)
+            color = self.default_node_color
+        return color
 
     def set_node(self, title, node_size_col, node_color_col):
         self.get_size_params(node_size_col)
+        print(self.size)
         color = self.get_color_params(node_color_col)
         self.node_trace = go.Scatter(
             x=[],
@@ -51,10 +65,10 @@ class Node:
                 color=color,
                 cmax = self.cmax,
                 cmin = self.cmin,
-                size=self.size,
+                size = self.size,
                 sizemode='area',
                 sizeref=self.sizeref,
-                sizemin=self.size,
+                sizemin=self.sizemin,
                 colorbar=dict(
                     thickness=15,
                     title=title,

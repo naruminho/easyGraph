@@ -12,7 +12,6 @@ class EasyGraph:
         self.G = nx.Graph()
         self.node = Node(self.G)
         self.edge = Edge()
-        self.show_scale = False
 
     def add_edge(self, from_node, to_node, attributes=None):
         """
@@ -42,25 +41,12 @@ class EasyGraph:
             self.edge_trace['x'] += tuple([x0, x1, None])
             self.edge_trace['y'] += tuple([y0, y1, None])
 
-
-
-    def __get_node_color_params(self, node_color_col):
-        color = []
-        if node_color_col is not None:
-            for node in self.G.nodes:
-                color.append(self.G.nodes[node][node_color_col])
-        else:
-            #color = [self.default_node_size]*len(self.G.nodes)
-            color = self.default_node_color
-        return color
-
-
     def __set_anotations(self):
         self.annotations = []
         for node in self.G.nodes():
             x, y = self.G.node[node]['pos']
-            self.node_trace['x'] += tuple([x])
-            self.node_trace['y'] += tuple([y])
+            self.node.node_trace['x'] += tuple([x])
+            self.node.node_trace['y'] += tuple([y])
             self.annotations.append(
                 dict(
                     x=x,
@@ -99,15 +85,15 @@ class EasyGraph:
 
         for node, adjacencies in enumerate(self.G.adjacency()):
             if node_color_col is None:
-                self.node_trace['marker']['color'] =  self.default_node_color
+                self.node.node_trace['marker']['color'] =  self.default_node_color
             else:
-                self.node_trace['marker']['color'] =  self.G.nodes[list(self.G.nodes.keys())[node]][node_color_col]
+                self.node.node_trace['marker']['color'] =  self.G.nodes[list(self.G.nodes.keys())[node]][node_color_col]
             if node_color_col is not None:
                 node_info = node_label +' '+ str(self.G.nodes[list(self.G.nodes.keys())[node]][node_color_col])
-                self.node_trace['text']+=tuple([node_info])
+                self.node.node_trace['text']+=tuple([node_info])
 
     def __plot(self):
-        fig = go.Figure(data=[self.edge_trace, self.node_trace],layout=self.layout)
+        fig = go.Figure(data=[self.edge_trace, self.node.node_trace],layout=self.layout)
         iplot(fig, filename='networkx')
 
     def plot(self, title=' ', node_label = '', label = ' ', node_size_col=None, node_color_col=None):
