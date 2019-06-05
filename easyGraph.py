@@ -41,7 +41,6 @@ class EasyGraph:
         self.node.set_pos()
         self.edge.set_edge()
         self.node.set_node(title, node_size_col, node_color_col)
-        self.node.set_anotations()
         self.node.set_layout(title)
         self.__set_plot(node_color_col, node_label)
         self.__plot()

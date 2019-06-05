@@ -49,7 +49,6 @@ class Node:
 
     def set_node(self, title, node_size_col, node_color_col):
         self.get_size_params(node_size_col)
-        print(self.size)
         color = self.get_color_params(node_color_col)
         self.settings = go.Scatter(
             x=[],
@@ -78,7 +77,7 @@ class Node:
                 line=dict(width=2)))
 
 
-    def set_anotations(self):
+    def __set_anotations(self):
         self.annotations = []
         for node in self.G.nodes():
             x, y = self.G.node[node]['pos']
@@ -98,6 +97,7 @@ class Node:
             )
 
     def set_layout(self, title=''):
+        self.__set_anotations()
         self.layout = go.Layout(
             showlegend=False,
             annotations=self.annotations,
