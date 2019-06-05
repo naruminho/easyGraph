@@ -22,9 +22,13 @@ class Edge:
         self.settings = go.Scatter(
             x=[],
             y=[],
-            line=dict(width=0.5,color='#888'),
+            line=dict(
+                width=0.5,
+                color='#888'
+            ),
             hoverinfo='none',
-            mode='lines')
+            mode='lines'
+        )
 
         for edge in self.G.edges():
             x0, y0 = self.G.node[edge[0]]['pos']

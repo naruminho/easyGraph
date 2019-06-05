@@ -4,12 +4,13 @@ import plotly.graph_objs as go
 class Node:
     def __init__(self, G):
         self.G = G
+        self.title = ''
         self.size = 10
         self.sizemin = self.size
-        self.default_color = 'darkblue'
         self.cmin = 10e1000
         self.cmax = -10e1000
         self.show_scale = False
+        self.default_color = 'darkblue'
 
     def add(self, name, attributes=None):
         """
@@ -37,19 +38,18 @@ class Node:
             self.size = [1]*len(self.G.nodes)
             self.sizeref = self.sizemin
 
-    def get_color_params(self, node_color_col):
+    def get_color_params(self, color_col):
         color = []
-        if node_color_col is not None:
+        if color_col is not None:
             for node in self.G.nodes:
-                color.append(self.G.nodes[node][node_color_col])
+                color.append(self.G.nodes[node][color_col])
         else:
-            #color = [self.default_node_size]*len(self.G.nodes)
             color = self.default_node_color
         return color
 
-    def set_node(self, title, node_size_col, node_color_col):
+    def set_size_attribute(self, node_size_col, color_col):
         self.get_size_params(node_size_col)
-        color = self.get_color_params(node_color_col)
+        #color = self.get_color_params(color_col)
         self.settings = go.Scatter(
             x=[],
             y=[],
@@ -58,10 +58,9 @@ class Node:
             hoverinfo='text',
             marker=dict(
                 showscale=self.show_scale,
-                #colorscale='YlGnBu',
-                colorscale='Viridis',
+                colorscale='YlGnBu',
                 reversescale=True,
-                color=color,
+        #        color=color,
                 cmax = self.cmax,
                 cmin = self.cmin,
                 size = self.size,
@@ -70,7 +69,7 @@ class Node:
                 sizemin=self.sizemin,
                 colorbar=dict(
                     thickness=15,
-                    title=title,
+                    title=self.title,
                     xanchor='left',
                     titleside='right'
                 ),
@@ -108,3 +107,31 @@ class Node:
             xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
             yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
         )
+
+    def get_cmin_cmax(self, attribute):
+        try:
+            for g in self.G.nodes:
+                if self.G.nodes[g][attribute] < self.cmin:
+                    self.cmin = self.G.nodes[g][attribute]
+                if self.G.nodes[g][attribute] > self.cmax:
+                    self.cmax = self.G.nodes[g][attribute]
+        except:
+            raise
+
+    def set_color_attribute(self, attribute):
+        if attribute is not None:
+            self.get_cmin_cmax(attribute)
+
+        if attribute is None:
+            self.settings['marker']['color'] =  self.default_color
+        else:
+            color = []
+            for node, adjacencies in enumerate(self.G.adjacency()):
+                color.append(self.G.nodes[list(self.G.nodes.keys())[node]][attribute])
+            self.settings['marker']['color'] = color
+
+    def set_hover_attribute(self, attribute, node_label=''):
+        for node, adjacencies in enumerate(self.G.adjacency()):
+            if attribute is not None:
+                node_info = node_label +' '+ str(self.G.nodes[list(self.G.nodes.keys())[node]][attribute])
+                self.settings['text']+=tuple([node_info])
