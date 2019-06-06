@@ -1,4 +1,4 @@
-from egfuncs import iterable
+from egfuncs import *
 import networkx as nx
 import plotly.graph_objs as go
 
@@ -25,8 +25,18 @@ class Node:
             for k, v in attributes.items():
                 self.G.nodes[name][k]=v
 
-    def set_pos(self):
-        self.pos = nx.circular_layout(self.G)
+    def set_pos(self, layout):
+        layouts = {
+            1: nx.circular_layout,
+            2: nx.random_layout,
+            3: nx.shell_layout,
+            4: nx.spring_layout,
+            5: nx.spectral_layout,
+            6: nx.fruchterman_reingold_layout
+        }
+        layout_func = layouts[layout]
+
+        self.pos = layout_func(self.G)
         self.G.add_nodes_from([(k[0], {'pos':[k[1][0],k[1][1]]}) for k in self.pos.items()])
 
     def get_size_params(self, node_size_col):
@@ -128,7 +138,10 @@ class Node:
         else:
             color = []
             for node, adjacencies in enumerate(self.G.adjacency()):
-                color.append(self.G.nodes[list(self.G.nodes.keys())[node]][attribute])
+                ncolor = self.G.nodes[list(self.G.nodes.keys())[node]][attribute]
+                pcolor = (ncolor - self.cmin)/(self.cmax - self.cmin)
+                color.append(get_color(pcolor)[1])
+                #color.append(ncolor)
             self.settings['marker']['color'] = color
 
     def set_hover_attribute(self, attribute):
@@ -138,7 +151,6 @@ class Node:
             attributes = attribute
         else:
             attributes = [attribute]
-        print(attributes)
         for node, adjacencies in enumerate(self.G.adjacency()):
             node_info = ''
             for attribute in attributes:

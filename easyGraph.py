@@ -8,22 +8,24 @@ from edges import *
 init_notebook_mode(connected=True)
 
 class EasyGraph:
-    def __init__(self):
+    def __init__(self, layout = 1):
         self.G = nx.Graph()
         self.node = Node(self.G)
         self.edge = Edge(self.G)
+        self.layout = layout
 
     def __plot(self):
-        fig = go.Figure(data=[self.node.settings, self.edge.settings],layout=self.node.layout)
+        data = [self.node.settings]
+        data.extend(self.edge.settings)
+        fig = go.Figure(data=data,layout=self.node.layout)
         iplot(fig, filename='networkx')
 
     def plot(self, title=' ', node_size_col=None, node_color_col=None, edge_color_col=None, hover_col=None):
         self.node.title = title
-        self.node.set_pos()
+        self.node.set_pos(self.layout)
         self.node.set_size_attribute(node_size_col, node_color_col)
         self.node.set_layout(title)
         self.node.set_color_attribute(node_color_col)
         self.node.set_hover_attribute(hover_col)
-        self.edge.set_color_attribute(node_color_col)
-
+        self.edge.set_color_attribute(edge_color_col)
         self.__plot()
