@@ -1,3 +1,4 @@
+from egfuncs import iterable
 import networkx as nx
 import plotly.graph_objs as go
 
@@ -11,7 +12,7 @@ class Node:
         self.cmax = -10e1000
         self.show_scale = False
         self.default_color = 'darkblue'
-    
+
     def add(self, name, attributes=None):
         """
            Add nodes to the graph.
@@ -130,8 +131,19 @@ class Node:
                 color.append(self.G.nodes[list(self.G.nodes.keys())[node]][attribute])
             self.settings['marker']['color'] = color
 
-    def set_hover_attribute(self, attribute, node_label=''):
+    def set_hover_attribute(self, attribute):
+        if attribute == None:
+            return
+        if iterable(attribute) and type(attribute) != str:
+            attributes = attribute
+        else:
+            attributes = [attribute]
+        print(attributes)
         for node, adjacencies in enumerate(self.G.adjacency()):
-            if attribute is not None:
-                node_info = node_label +' '+ str(self.G.nodes[list(self.G.nodes.keys())[node]][attribute])
-                self.settings['text']+=tuple([node_info])
+            node_info = ''
+            for attribute in attributes:
+                try:
+                    node_info += attribute + ': ' + str(self.G.nodes[list(self.G.nodes.keys())[node]][attribute])+'<br>'
+                except:
+                    pass
+            self.settings['text']+=tuple([node_info])
