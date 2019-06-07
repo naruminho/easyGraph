@@ -1,13 +1,15 @@
 from egfuncs import *
 import networkx as nx
 import plotly.graph_objs as go
+import consts
 
 class Node:
-    def __init__(self, G):
+    def __init__(self, G, dict=None):
         self.G = G
         self.title = ''
-        self.size = 10
+        self.size = 5
         self.sizemin = self.size
+        self.sizemax = 50
         self.cmin = 10e1000
         self.cmax = -10e1000
         self.show_scale = False
@@ -44,7 +46,7 @@ class Node:
             self.size = []
             for node in self.G.nodes:
                 self.size.append(self.G.nodes[node][node_size_col])
-            self.sizeref = 2.*max(self.size)/(40.**2)
+            self.sizeref = 2.*max(self.size)/(float(self.sizemax)**2)
         else:
             self.size = [1]*len(self.G.nodes)
             self.sizeref = self.sizemin
@@ -69,7 +71,8 @@ class Node:
             hoverinfo='text',
             marker=dict(
                 showscale=self.show_scale,
-                colorscale='YlGnBu',
+                #colorscale='YlGnBu',
+                colorscale=consts.colorscale,
                 reversescale=True,
         #        color=color,
                 cmax = self.cmax,

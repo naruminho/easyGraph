@@ -18,7 +18,9 @@ class EasyGraph:
         data = [self.node.settings]
         data.extend(self.edge.settings)
         fig = go.Figure(data=data,layout=self.node.layout)
-        iplot(fig, filename='networkx')
+        iplot(fig)
+#        plot(fig, filename='networkx.html')
+
 
     def plot(self, title=' ', node_size_col=None, node_color_col=None, edge_color_col=None, hover_col=None):
         self.node.title = title
@@ -29,3 +31,5 @@ class EasyGraph:
         self.node.set_hover_attribute(hover_col)
         self.edge.set_color_attribute(edge_color_col)
         self.__plot()
+
+    # def save
