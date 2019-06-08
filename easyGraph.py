@@ -22,7 +22,7 @@ class EasyGraph:
 #        plot(fig, filename='networkx.html')
 
 
-    def plot(self, title=' ', node_size_col=None, node_color_col=None, edge_color_col=None, hover_col=None):
+    def plot(self, title=' ', node_size_col=None, node_color_col=None, edge_color_col=None, hover_col='all_col'):
         self.node.title = title
         self.node.set_pos(self.layout)
         self.node.set_size_attribute(node_size_col, node_color_col)

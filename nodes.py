@@ -144,7 +144,8 @@ class Node:
                 ncolor = self.G.nodes[list(self.G.nodes.keys())[node]][attribute]
                 pcolor = (ncolor - self.cmin)/(self.cmax - self.cmin)
                 color.append(get_color(pcolor)[1])
-                #color.append(ncolor)
+
+
             self.settings['marker']['color'] = color
 
     def set_hover_attribute(self, attribute):
@@ -154,11 +155,16 @@ class Node:
             attributes = attribute
         else:
             attributes = [attribute]
-        for node, adjacencies in enumerate(self.G.adjacency()):
+
+        for node in self.G.nodes:
             node_info = ''
+            if attribute == 'all_col': # get distinct attributes for each node
+                attributes = list(self.G.nodes[node].keys())
             for attribute in attributes:
+                if attribute == 'pos': # filter pos from hover
+                    continue
                 try:
-                    node_info += attribute + ': ' + str(self.G.nodes[list(self.G.nodes.keys())[node]][attribute])+'<br>'
+                    node_info += attribute + ': ' + str(self.G.nodes[node][attribute])+'<br>'
                 except:
                     pass
             self.settings['text']+=tuple([node_info])
