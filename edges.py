@@ -1,10 +1,14 @@
 import networkx as nx
+from egfuncs import *
 import plotly.graph_objs as go
+import copy
 
 class Edge:
     def __init__(self, G):
         self.G = G
         self.default_color = 'black'
+        self.cmin = 10e1000
+        self.cmax = -10e1000
 
     def add(self, from_node, to_node, attributes=None):
         """
@@ -29,9 +33,22 @@ class Edge:
     #             color.append('black')
     #     return color
 
-    def set_color_attribute(self, color_col):
+    def get_cmin_cmax(self, attribute):
+        try:
+            for g in self.G.edges:
+                if self.G.edges[g][attribute] < self.cmin:
+                    self.cmin = self.G.edges[g][attribute]
+                if self.G.edges[g][attribute] > self.cmax:
+                    self.cmax = self.G.edges[g][attribute]
+        except:
+            raise
 
-        self.settings = go.Scatter(
+    def set_color_attribute(self, color_col):
+        if color_col is not None:
+            self.get_cmin_cmax(color_col)
+
+        self.settings = []
+        trace_default = go.Scatter(
             x=[],
             y=[],
             line=dict(
@@ -41,9 +58,17 @@ class Edge:
             hoverinfo='none',
             mode='lines'
         )
-
+        trace = copy.deepcopy(trace_default)
         for edge in self.G.edges():
             x0, y0 = self.G.node[edge[0]]['pos']
             x1, y1 = self.G.node[edge[1]]['pos']
-            self.settings['x'] += tuple([x0, x1, None])
-            self.settings['y'] += tuple([y0, y1, None])
+            trace['x'] = tuple([x0, x1, None])
+            trace['y'] = tuple([y0, y1, None])
+            if color_col == None:
+                color = self.default_color
+            else:
+                nvalue = self.G.edges[edge][color_col]
+                pvalue = (nvalue - self.cmin)/(self.cmax-self.cmin)
+                color = get_color(pvalue)[1]
+            trace['line'] = dict(width=0.5,color=color)
+            self.settings.append(copy.deepcopy(trace))

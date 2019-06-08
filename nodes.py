@@ -1,17 +1,20 @@
+from egfuncs import *
 import networkx as nx
 import plotly.graph_objs as go
+import consts
 
 class Node:
-    def __init__(self, G):
+    def __init__(self, G, dict=None):
         self.G = G
         self.title = ''
-        self.size = 10
+        self.size = 5
         self.sizemin = self.size
+        self.sizemax = 50
         self.cmin = 10e1000
         self.cmax = -10e1000
         self.show_scale = False
         self.default_color = 'darkblue'
-    
+
     def add(self, name, attributes=None):
         """
            Add nodes to the graph.
@@ -24,8 +27,17 @@ class Node:
             for k, v in attributes.items():
                 self.G.nodes[name][k]=v
 
-    def set_pos(self):
-        self.pos = nx.circular_layout(self.G)
+    def set_pos(self, layout, dim):
+        layouts = {
+            1: nx.circular_layout,
+            2: nx.random_layout,
+            3: nx.shell_layout,
+            4: nx.spring_layout,
+            5: nx.spectral_layout,
+            6: nx.fruchterman_reingold_layout
+        }
+        layout_func = layouts[layout]
+        self.pos = layout_func(self.G, dim = dim)
         self.G.add_nodes_from([(k[0], {'pos':[k[1][0],k[1][1]]}) for k in self.pos.items()])
 
     def get_size_params(self, node_size_col):
@@ -33,7 +45,7 @@ class Node:
             self.size = []
             for node in self.G.nodes:
                 self.size.append(self.G.nodes[node][node_size_col])
-            self.sizeref = 2.*max(self.size)/(40.**2)
+            self.sizeref = 2.*max(self.size)/(float(self.sizemax)**2)
         else:
             self.size = [1]*len(self.G.nodes)
             self.sizeref = self.sizemin
@@ -58,7 +70,8 @@ class Node:
             hoverinfo='text',
             marker=dict(
                 showscale=self.show_scale,
-                colorscale='YlGnBu',
+                #colorscale='YlGnBu',
+                colorscale=consts.colorscale,
                 reversescale=True,
         #        color=color,
                 cmax = self.cmax,
@@ -127,11 +140,28 @@ class Node:
         else:
             color = []
             for node, adjacencies in enumerate(self.G.adjacency()):
-                color.append(self.G.nodes[list(self.G.nodes.keys())[node]][attribute])
+                ncolor = self.G.nodes[list(self.G.nodes.keys())[node]][attribute]
+                pcolor = (ncolor - self.cmin)/(self.cmax - self.cmin)
+                color.append(get_color(pcolor)[1])
             self.settings['marker']['color'] = color
 
-    def set_hover_attribute(self, attribute, node_label=''):
-        for node, adjacencies in enumerate(self.G.adjacency()):
-            if attribute is not None:
-                node_info = node_label +' '+ str(self.G.nodes[list(self.G.nodes.keys())[node]][attribute])
-                self.settings['text']+=tuple([node_info])
+    def set_hover_attribute(self, attribute):
+        if attribute == None:
+            return
+        if iterable(attribute) and type(attribute) != str:
+            attributes = attribute
+        else:
+            attributes = [attribute]
+
+        for node in self.G.nodes:
+            node_info = ''
+            if attribute == 'all_col': # get distinct attributes for each node
+                attributes = list(self.G.nodes[node].keys())
+            for attribute in attributes:
+                if attribute == 'pos': # filter pos from hover
+                    continue
+                try:
+                    node_info += attribute + ': ' + str(self.G.nodes[node][attribute])+'<br>'
+                except:
+                    pass
+            self.settings['text']+=tuple([node_info])
