@@ -10,5 +10,5 @@ myscale = [
     [0.8888888888888888, 'rgb(69,117,180)'],
     [1.0, 'rgb(49,54,149)']
 ]
-
-colorscale = myscale
+#colorscale = myscale
+colorscale = 'Viridis'

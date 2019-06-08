@@ -27,7 +27,7 @@ class Node:
             for k, v in attributes.items():
                 self.G.nodes[name][k]=v
 
-    def set_pos(self, layout):
+    def set_pos(self, layout, dim):
         layouts = {
             1: nx.circular_layout,
             2: nx.random_layout,
@@ -37,8 +37,8 @@ class Node:
             6: nx.fruchterman_reingold_layout
         }
         layout_func = layouts[layout]
-
-        self.pos = layout_func(self.G)
+        self.pos = layout_func(self.G, dim = dim)
+        print('ioioiiooio',self.pos, dim)
         self.G.add_nodes_from([(k[0], {'pos':[k[1][0],k[1][1]]}) for k in self.pos.items()])
 
     def get_size_params(self, node_size_col):
@@ -144,8 +144,6 @@ class Node:
                 ncolor = self.G.nodes[list(self.G.nodes.keys())[node]][attribute]
                 pcolor = (ncolor - self.cmin)/(self.cmax - self.cmin)
                 color.append(get_color(pcolor)[1])
-
-
             self.settings['marker']['color'] = color
 
     def set_hover_attribute(self, attribute):
