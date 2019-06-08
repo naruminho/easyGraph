@@ -38,7 +38,6 @@ class Node:
         }
         layout_func = layouts[layout]
         self.pos = layout_func(self.G, dim = dim)
-        print('ioioiiooio',self.pos, dim)
         self.G.add_nodes_from([(k[0], {'pos':[k[1][0],k[1][1]]}) for k in self.pos.items()])
 
     def get_size_params(self, node_size_col):
