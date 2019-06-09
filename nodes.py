@@ -129,14 +129,14 @@ class Node:
         )
 
     def get_cmin_cmax(self, attribute):
-        try:
             for g in self.G.nodes:
-                if self.G.nodes[g][attribute] < self.cmin:
-                    self.cmin = self.G.nodes[g][attribute]
-                if self.G.nodes[g][attribute] > self.cmax:
-                    self.cmax = self.G.nodes[g][attribute]
-        except:
-            raise
+                try:
+                    if self.G.nodes[g][attribute] < self.cmin:
+                        self.cmin = self.G.nodes[g][attribute]
+                    if self.G.nodes[g][attribute] > self.cmax:
+                        self.cmax = self.G.nodes[g][attribute]
+                except:
+                    raise
 
     def set_color_attribute(self, attribute):
         if attribute is not None:

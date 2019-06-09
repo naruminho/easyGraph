@@ -10,6 +10,15 @@ class Edge:
         self.cmin = 10e1000
         self.cmax = -10e1000
 
+    def load(self, df, from_col, to_col):
+        for index, row in df.iterrows():
+            f = row[from_col]
+            t = row[to_col]
+            mydict = row.to_dict()
+            mydict.pop(from_col, None)
+            mydict.pop(to_col, None)
+            self.add(f, t, mydict)
+
     def add(self, from_node, to_node, attributes=None):
         """
            Add edges to the graph.
@@ -22,16 +31,6 @@ class Edge:
         if attributes is not None:
             for k, v in attributes.items():
                 self.G.edges[(from_node,to_node)][k]=v
-
-    # def get_color_params(self, color_col):
-    #     if color_col is None:
-    #         color = self.default_color
-    #     else:
-    #         color = []
-    #         for edge in self.G.edges:
-    #             #color.append(self.G.edges[edge][color_col])
-    #             color.append('black')
-    #     return color
 
     def get_cmin_cmax(self, attribute):
         try:
@@ -46,7 +45,6 @@ class Edge:
     def set_color_attribute(self, color_col):
         if color_col is not None:
             self.get_cmin_cmax(color_col)
-
         self.settings = []
         trace_default = go.Scatter(
             x=[],
