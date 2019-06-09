@@ -1,3 +1,3 @@
-# easyGraph - A python library for easy plot graph networks
+# easyGraph - A python library for plot graph networks
 
 
