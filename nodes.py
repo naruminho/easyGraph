@@ -15,6 +15,14 @@ class Node:
         self.show_scale = False
         self.default_color = 'darkblue'
 
+    def load(self, df, id_col):
+        for index, row in df.iterrows():
+            v = row[id_col]
+            mydict = row.to_dict()
+            mydict.pop(id_col, None)
+            self.add(v, mydict)
+
+
     def add(self, name, attributes=None):
         """
            Add nodes to the graph.
