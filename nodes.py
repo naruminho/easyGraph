@@ -4,8 +4,9 @@ import plotly.graph_objs as go
 import consts
 
 class Node:
-    def __init__(self, G, dict=None):
+    def __init__(self, G, dim, dict=None):
         self.G = G
+        self.dim = dim
         self.title = ''
         self.size = 5
         self.sizemin = self.size
@@ -14,6 +15,7 @@ class Node:
         self.cmax = -10e1000
         self.show_scale = False
         self.default_color = 'darkblue'
+        self.annotations = []
 
     def load(self, df, id_col):
         for index, row in df.iterrows():
@@ -45,7 +47,7 @@ class Node:
         }
         layout_func = layouts[layout]
         self.pos = layout_func(self.G, dim = dim)
-        self.G.add_nodes_from([(k[0], {'pos':[k[1][0],k[1][1]]}) for k in self.pos.items()])
+        self.G.add_nodes_from([(k[0], {'pos':k[1]}) for k in self.pos.items()])
 
     def get_size_params(self, node_size_col):
         if node_size_col is not None:
@@ -66,9 +68,35 @@ class Node:
             color = self.default_node_color
         return color
 
-    def set_size_attribute(self, node_size_col, color_col):
-        self.get_size_params(node_size_col)
-        #color = self.get_color_params(color_col)
+    def set_3d_settings(self):
+        self.settings = go.Scatter3d(
+            x=[],
+            y=[],
+            z=[],
+            text=[],
+            mode='markers',
+            hoverinfo='text',
+            marker=dict(
+                showscale=self.show_scale,
+                #colorscale='YlGnBu',
+                colorscale=consts.colorscale,
+                reversescale=True,
+        #        color=color,
+                cmax = self.cmax,
+                cmin = self.cmin,
+                size = self.size,
+                sizemode='area',
+                sizeref=self.sizeref,
+                sizemin=self.sizemin,
+                colorbar=dict(
+                    thickness=15,
+                    title=self.title,
+                    xanchor='left',
+                    titleside='right'
+                ),
+                line=dict(width=2)))
+
+    def set_2d_settings(self):
         self.settings = go.Scatter(
             x=[],
             y=[],
@@ -95,9 +123,15 @@ class Node:
                 ),
                 line=dict(width=2)))
 
+    def set_size_attribute(self, node_size_col, color_col):
+        self.get_size_params(node_size_col)
+        #color = self.get_color_params(color_col)
+        if self.dim == 3:
+            self.set_3d_settings()
+        else:
+            self.set_2d_settings()
 
-    def __set_anotations(self):
-        self.annotations = []
+    def set_2d_annotations(self):
         for node in self.G.nodes():
             x, y = self.G.node[node]['pos']
             self.settings['x'] += tuple([x])
@@ -115,8 +149,35 @@ class Node:
                 )
             )
 
+    def set_3d_annotations(self):
+        for node in self.G.nodes():
+            x, y, z = self.G.node[node]['pos']
+            self.settings['x'] += tuple([x])
+            self.settings['y'] += tuple([y])
+            self.settings['z'] += tuple([z])
+            self.annotations.append(
+                dict(
+                    x=x,
+                    y=y+0.10,
+                    xref='x',
+                    yref='y',
+                    #zref='z',
+                    text=node,
+                    showarrow=False,
+                    ax=0,
+                    ay=20,
+                    #az=0
+                )
+            )
+
+    def set_annotations(self):
+        if self.dim == 3:
+            self.set_3d_annotations()
+        else:
+            self.set_2d_annotations()
+
     def set_layout(self, title=''):
-        self.__set_anotations()
+        self.set_annotations()
         self.layout = go.Layout(
             showlegend=False,
             annotations=self.annotations,
