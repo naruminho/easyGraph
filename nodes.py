@@ -22,7 +22,6 @@ class Node:
             mydict.pop(id_col, None)
             self.add(v, mydict)
 
-
     def add(self, name, attributes=None):
         """
            Add nodes to the graph.
