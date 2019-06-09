@@ -165,8 +165,7 @@ class Node:
                     text=node,
                     showarrow=False,
                     ax=0,
-                    ay=20,
-                    #az=0
+                    ay=20
                 )
             )
 
@@ -185,8 +184,11 @@ class Node:
             titlefont=dict(size=16),
             hovermode='closest',
             margin=dict(b=20,l=5,r=5,t=40),
-            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
+            scene = dict(
+                xaxis=dict(consts.axis),
+                yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                zaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
+            )
         )
 
     def get_cmin_cmax(self, attribute):
@@ -223,6 +225,8 @@ class Node:
 
         for node in self.G.nodes:
             node_info = ''
+            #if self.dim == 3:
+            node_info = '<b>{}</b><br>'.format(node)
             if attribute == 'all_col': # get distinct attributes for each node
                 attributes = list(self.G.nodes[node].keys())
             for attribute in attributes:

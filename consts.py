@@ -12,3 +12,12 @@ myscale = [
 ]
 #colorscale = myscale
 colorscale = 'Viridis'
+
+axis=dict(
+    showbackground=False,
+    showline=False,
+    zeroline=False,
+    showgrid=False,
+    showticklabels=False,
+    title=''
+)

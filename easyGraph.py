@@ -12,7 +12,7 @@ class EasyGraph:
         self.G = nx.Graph()
         self.dim = dim
         self.node = Node(self.G, dim)
-        self.edge = Edge(self.G)
+        self.edge = Edge(self.G, dim)
         self.layout = layout
 
     def __plot(self, filename):
@@ -23,7 +23,9 @@ class EasyGraph:
         if filename is not None:
             plot(fig, filename=filename)
 
-    def plot(self, title=' ', node_size_col=None, node_color_col=None, edge_color_col=None, edge_width_col =None, hover_col='all_col', filename=None):
+    def plot(self, title=' ', node_size_col=None, node_color_col=None,
+             edge_color_col=None, edge_width_col =None, hover_col='all_col',
+             filename=None):
         self.node.title = title
         self.node.set_pos(self.layout, self.dim)
         self.node.set_size_attribute(node_size_col, node_color_col)
@@ -32,5 +34,3 @@ class EasyGraph:
         self.node.set_hover_attribute(hover_col)
         self.edge.set_attribute(edge_color_col, edge_width_col)
         self.__plot(filename)
-
-    # def save
