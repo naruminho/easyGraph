@@ -8,8 +8,10 @@ class Node:
         self.G = G
         self.dim = dim
         self.title = ''
-        self.size = 5
+        self.size = 6
         self.sizemin = self.size
+        if dim == 3:
+            self.sizemin=15
         self.sizemax = 50
         self.cmin = 10e1000
         self.cmax = -10e1000
@@ -159,6 +161,7 @@ class Node:
                 dict(
                     x=x,
                     y=y+0.10,
+                    z=z,
                     xref='x',
                     yref='y',
                     #zref='z',
@@ -186,8 +189,8 @@ class Node:
             margin=dict(b=20,l=5,r=5,t=40),
             scene = dict(
                 xaxis=dict(consts.axis),
-                yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-                zaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
+                yaxis=dict(consts.axis),
+                zaxis=dict(consts.axis)
             )
         )
 
