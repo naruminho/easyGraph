@@ -7,8 +7,11 @@ class Edge:
     def __init__(self, G):
         self.G = G
         self.default_color = 'black'
-        self.cmin = 10e1000
-        self.cmax = -10e1000
+        self.cmin = None
+        self.cmax = None
+        self.wmin = None
+        self.wmax = None
+        self.default_width = 0.5
 
     def load(self, df, from_col, to_col):
         for index, row in df.iterrows():
@@ -32,25 +35,36 @@ class Edge:
             for k, v in attributes.items():
                 self.G.edges[(from_node,to_node)][k]=v
 
-    def get_cmin_cmax(self, attribute):
+    def get_min_max(self, attribute):
         try:
+            min = 10e10
+            max = -10e10
             for g in self.G.edges:
-                if self.G.edges[g][attribute] < self.cmin:
-                    self.cmin = self.G.edges[g][attribute]
-                if self.G.edges[g][attribute] > self.cmax:
-                    self.cmax = self.G.edges[g][attribute]
+                if self.G.edges[g][attribute] < min:
+                    min = self.G.edges[g][attribute]
+                if self.G.edges[g][attribute] > max:
+                    max = self.G.edges[g][attribute]
         except:
             raise
+        return min, max
 
-    def set_color_attribute(self, color_col):
+    def get_cmin_cmax(self, attribute):
+        self.cmin, self.cmax = self.get_min_max(attribute)
+
+    def get_wmin_wmax(self, attribute):
+        self.wmin, self.wmax = self.get_min_max(attribute)
+
+    def set_attribute(self, color_col, width_col):
         if color_col is not None:
             self.get_cmin_cmax(color_col)
+        if width_col is not None:
+            self.get_wmin_wmax(width_col)
         self.settings = []
         trace_default = go.Scatter(
             x=[],
             y=[],
             line=dict(
-                width=0.5,
+                width=self.default_width,
                 color=self.default_color,
             ),
             hoverinfo='none',
@@ -68,5 +82,13 @@ class Edge:
                 nvalue = self.G.edges[edge][color_col]
                 pvalue = (nvalue - self.cmin)/(self.cmax-self.cmin)
                 color = get_color(pvalue)[1]
-            trace['line'] = dict(width=0.5,color=color)
+
+            if width_col == None:
+                width = self.default_width
+            else:
+                nvalue = self.G.edges[edge][width_col]
+                pvalue = self.default_width + (nvalue - self.wmin)/(self.wmax-self.wmin)*4.5
+                width = pvalue
+
+            trace['line'] = dict(width=width,color=color)
             self.settings.append(copy.deepcopy(trace))
