@@ -11,7 +11,8 @@ class Edge:
         self.cmax = None
         self.wmin = None
         self.wmax = None
-        self.default_width = 0.5
+        self.default_min_width = 0.5
+        self.default_max_width = 5
 
     def load(self, df, from_col, to_col):
         for index, row in df.iterrows():
@@ -64,7 +65,7 @@ class Edge:
             x=[],
             y=[],
             line=dict(
-                width=self.default_width,
+                width=self.default_min_width,
                 color=self.default_color,
             ),
             hoverinfo='none',
@@ -84,10 +85,10 @@ class Edge:
                 color = get_color(pvalue)[1]
 
             if width_col == None:
-                width = self.default_width
+                width = self.default_min_width
             else:
                 nvalue = self.G.edges[edge][width_col]
-                pvalue = self.default_width + (nvalue - self.wmin)/(self.wmax-self.wmin)*4.5
+                pvalue = self.default_min_width + (nvalue - self.wmin)/(self.wmax-self.wmin)*self.default_max_width
                 width = pvalue
 
             trace['line'] = dict(width=width,color=color)

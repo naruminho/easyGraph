@@ -22,7 +22,6 @@ class EasyGraph:
         iplot(fig)
 #        plot(fig, filename='networkx.html')
 
-
     def plot(self, title=' ', node_size_col=None, node_color_col=None, edge_color_col=None, edge_width_col =None, hover_col='all_col'):
         self.node.title = title
         self.node.set_pos(self.layout, self.dim)
