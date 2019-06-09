@@ -15,6 +15,13 @@ class Node:
         self.show_scale = False
         self.default_color = 'darkblue'
 
+    def load(self, df, id_col):
+        for index, row in df.iterrows():
+            v = row[id_col]
+            mydict = row.to_dict()
+            mydict.pop(id_col, None)
+            self.add(v, mydict)
+
     def add(self, name, attributes=None):
         """
            Add nodes to the graph.
@@ -122,14 +129,14 @@ class Node:
         )
 
     def get_cmin_cmax(self, attribute):
-        try:
             for g in self.G.nodes:
-                if self.G.nodes[g][attribute] < self.cmin:
-                    self.cmin = self.G.nodes[g][attribute]
-                if self.G.nodes[g][attribute] > self.cmax:
-                    self.cmax = self.G.nodes[g][attribute]
-        except:
-            raise
+                try:
+                    if self.G.nodes[g][attribute] < self.cmin:
+                        self.cmin = self.G.nodes[g][attribute]
+                    if self.G.nodes[g][attribute] > self.cmax:
+                        self.cmax = self.G.nodes[g][attribute]
+                except:
+                    raise
 
     def set_color_attribute(self, attribute):
         if attribute is not None:
