@@ -15,14 +15,15 @@ class EasyGraph:
         self.edge = Edge(self.G)
         self.layout = layout
 
-    def __plot(self):
+    def __plot(self, filename):
         data = [self.node.settings]
         data.extend(self.edge.settings)
         fig = go.Figure(data=data,layout=self.node.layout)
         iplot(fig)
-#        plot(fig, filename='networkx.html')
+        if filename is not None:
+            plot(fig, filename=filename)
 
-    def plot(self, title=' ', node_size_col=None, node_color_col=None, edge_color_col=None, edge_width_col =None, hover_col='all_col'):
+    def plot(self, title=' ', node_size_col=None, node_color_col=None, edge_color_col=None, edge_width_col =None, hover_col='all_col', filename=None):
         self.node.title = title
         self.node.set_pos(self.layout, self.dim)
         self.node.set_size_attribute(node_size_col, node_color_col)
@@ -30,6 +31,6 @@ class EasyGraph:
         self.node.set_color_attribute(node_color_col)
         self.node.set_hover_attribute(hover_col)
         self.edge.set_attribute(edge_color_col, edge_width_col)
-        self.__plot()
+        self.__plot(filename)
 
     # def save
