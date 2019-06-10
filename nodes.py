@@ -8,7 +8,7 @@ class Node:
         self.G = G
         self.dim = dim
         self.title = ''
-        self.size = 6
+        self.size = 5
         self.sizemin = self.size
         if dim == 3:
             self.sizemin=15
@@ -161,7 +161,6 @@ class Node:
                 dict(
                     x=x,
                     y=y+0.10,
-                    z=z,
                     xref='x',
                     yref='y',
                     #zref='z',
