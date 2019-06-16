@@ -159,17 +159,22 @@ class Node:
             self.settings['z'] += tuple([z])
             self.annotations.append(
                 dict(
+                    showarrow = False,
                     x=x,
                     y=y+0.10,
-                    xref='x',
-                    yref='y',
-                    #zref='z',
-                    text=node,
-                    showarrow=False,
-                    ax=0,
-                    ay=20
+                    z=z,
+                    xanchor = "left",
+                    xshift = 10,
+                    #xref='paper',
+                    #yref='paper',
+                    # xanchor='left',
+                    yanchor='bottom',
+                    # font=dict(
+                    #     size=14
+                    # )
                 )
             )
+
 
     def set_annotations(self):
         if self.dim == 3:
@@ -177,12 +182,28 @@ class Node:
         else:
             self.set_2d_annotations()
 
-    def set_layout(self, title=''):
+    def set_2d_layout(self, title):
         self.set_annotations()
         self.layout = go.Layout(
             showlegend=False,
             annotations=self.annotations,
             title=title,
+            xaxis=dict(
+                    autorange=True,
+                    showgrid=False,
+                    zeroline=False,
+                    showline=False,
+                    ticks='',
+                    showticklabels=False
+                ),
+            yaxis=dict(
+                    autorange=True,
+                    showgrid=False,
+                    zeroline=False,
+                    showline=False,
+                    ticks='',
+                    showticklabels=False
+                ),
             titlefont=dict(size=16),
             hovermode='closest',
             margin=dict(b=20,l=5,r=5,t=40),
@@ -192,6 +213,60 @@ class Node:
                 zaxis=dict(consts.axis)
             )
         )
+
+    def set_3d_layout(self, title):
+        self.set_annotations()
+        self.layout = go.Layout(
+           scene = dict(
+            aspectratio = dict(
+              x = 1,
+              y = 1,
+              z = 1
+            ),
+            camera = dict(
+              center = dict(
+                x = 0,
+                y = 0,
+                z = 0
+              ),
+              eye = dict(
+                x = 1.96903462608,
+                y = -1.09022831971,
+                z = 0.405345349304
+              ),
+              up = dict(
+                x = 0,
+                y = 0,
+                z = 1
+              )
+            ),
+            dragmode = "turntable",
+            xaxis = dict(
+              title = "",
+              type = "date"
+            ),
+            yaxis = dict(
+              title = "",
+              type = "category"
+            ),
+            zaxis = dict(
+              title = "",
+              type = "log"
+            ),
+            annotations = self.annotations
+
+          ),
+          xaxis = dict(title = "x"),
+          yaxis = dict(title = "y")
+        )
+
+
+
+    def set_layout(self, title=''):
+        if self.dim != 3:
+            self.set_2d_layout(title)
+        else:
+            self.set_3d_layout(title)
 
     def get_cmin_cmax(self, attribute):
             for g in self.G.nodes:
