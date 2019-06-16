@@ -1,0 +1,27 @@
+{% set name = "easygraph" %}
+{% set version = "1.0" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  host:
+    - pip
+    - python
+  run:
+    - python
+
+about:
+  home: https://github.com/naruminho/easygraph
+  license: MIT
+  license_family: MIT
+  summary: A tool for plotting graph networks
