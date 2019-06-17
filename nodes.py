@@ -8,7 +8,7 @@ class Node:
         self.G = G
         self.dim = dim
         self.title = ''
-        self.size = 5
+        self.size = 5 # padronizar esse nome com o dos edges
         self.sizemin = self.size
         if dim == 3:
             self.sizemin=15
@@ -163,18 +163,15 @@ class Node:
                     x=x,
                     y=y+0.10,
                     z=z,
+                    text=node,
                     xanchor = "left",
                     xshift = 10,
-                    #xref='paper',
-                    #yref='paper',
-                    # xanchor='left',
                     yanchor='bottom',
-                    # font=dict(
-                    #     size=14
-                    # )
+                    font=dict(
+                        size=14
+                    )
                 )
             )
-
 
     def set_annotations(self):
         if self.dim == 3:
@@ -217,11 +214,45 @@ class Node:
     def set_3d_layout(self, title):
         self.set_annotations()
         self.layout = go.Layout(
+            margin=dict(
+                t=100
+            ),
+            width=1000,
+            height=1000,
+            showlegend=True, # mostra a legenda clicavel
            scene = dict(
+               xaxis=dict(
+                       autorange=True,
+                       showgrid=False,
+                       zeroline=False,
+                       showline=False,
+                       ticks='',
+                       title='', # esconde o texto do eixo
+                       showticklabels=False
+                   ),
+               yaxis=dict(
+                       autorange=True,
+                       showgrid=False,
+                       zeroline=False,
+                       showline=False,
+                       ticks='',
+                       title='',
+                       showticklabels=False
+                   ),
+              zaxis=dict(
+                      autorange=True,
+                      showgrid=False,
+                      zeroline=False,
+                      showline=False,
+                      ticks='',
+                      title='',
+                      showticklabels=False
+                  ),
             aspectratio = dict(
               x = 1,
               y = 1,
-              z = 1
+              z = 1,
+
             ),
             camera = dict(
               center = dict(
@@ -241,26 +272,10 @@ class Node:
               )
             ),
             dragmode = "turntable",
-            xaxis = dict(
-              title = "",
-              type = "date"
-            ),
-            yaxis = dict(
-              title = "",
-              type = "category"
-            ),
-            zaxis = dict(
-              title = "",
-              type = "log"
-            ),
             annotations = self.annotations
-
           ),
-          xaxis = dict(title = "x"),
-          yaxis = dict(title = "y")
+
         )
-
-
 
     def set_layout(self, title=''):
         if self.dim != 3:

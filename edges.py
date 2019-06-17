@@ -75,6 +75,7 @@ class Edge:
             x1, y1 = self.G.node[edge[1]]['pos']
             trace['x'] = tuple([x0, x1, None])
             trace['y'] = tuple([y0, y1, None])
+            trace['name'] = edge[0] + '-' + edge[1]
             if color_col == None:
                 color = self.default_color
             else:
@@ -113,6 +114,7 @@ class Edge:
             trace['x'] = tuple([x0, x1, None])
             trace['y'] = tuple([y0, y1, None])
             trace['z'] = tuple([z0, z1, None])
+            trace['name'] = edge[0] + '-' + edge[1]
             if color_col == None:
                 color = self.default_color
             else:
