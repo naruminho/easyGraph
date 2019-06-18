@@ -1,0 +1,13 @@
+README.md
+setup.cfg
+setup.py
+easygraph/consts.py
+easygraph/easyGraph.py
+easygraph/edges.py
+easygraph/egfuncs.py
+easygraph/nodes.py
+easygraph.egg-info/PKG-INFO
+easygraph.egg-info/SOURCES.txt
+easygraph.egg-info/dependency_links.txt
+easygraph.egg-info/requires.txt
+easygraph.egg-info/top_level.txt
