@@ -1,6 +1,6 @@
-# easyGraph
+# Tareco
 
-**easygraph** is a python library for plot graph networks.
+**tareco** is a python library for plot graph networks.
 
 ## Functions
 
