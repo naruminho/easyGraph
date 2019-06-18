@@ -1,11 +1,12 @@
 import networkx as nx
 import plotly.graph_objs as go
-from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+#from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+from plotly.offline import download_plotlyjs, plot
 
 from .nodes import *
 from .edges import *
 
-init_notebook_mode(connected=True)
+#init_notebook_mode(connected=True)
 
 class Tareco:
     def __init__(self, layout = 1, dim=2):
@@ -19,7 +20,7 @@ class Tareco:
         data = [self.node.settings]
         data.extend(self.edge.settings)
         fig = go.Figure(data=data,layout=self.node.layout)
-        iplot(fig)
+        plot(fig)
         if filename is not None:
             plot(fig, filename=filename)
 
