@@ -1,7 +1,7 @@
-from egfuncs import *
+from .egfuncs import *
 import networkx as nx
 import plotly.graph_objs as go
-import consts
+from .consts import *
 
 class Node:
     def __init__(self, G, dim, dict=None):
@@ -81,7 +81,7 @@ class Node:
             marker=dict(
                 showscale=self.show_scale,
                 #colorscale='YlGnBu',
-                colorscale=consts.colorscale,
+                colorscale=colorscale,
                 reversescale=True,
         #        color=color,
                 cmax = self.cmax,
@@ -108,7 +108,7 @@ class Node:
             marker=dict(
                 showscale=self.show_scale,
                 #colorscale='YlGnBu',
-                colorscale=consts.colorscale,
+                colorscale=colorscale,
                 reversescale=True,
         #        color=color,
                 cmax = self.cmax,
@@ -205,9 +205,9 @@ class Node:
             hovermode='closest',
             margin=dict(b=20,l=5,r=5,t=40),
             scene = dict(
-                xaxis=dict(consts.axis),
-                yaxis=dict(consts.axis),
-                zaxis=dict(consts.axis)
+                xaxis=dict(axis),
+                yaxis=dict(axis),
+                zaxis=dict(axis)
             )
         )
 

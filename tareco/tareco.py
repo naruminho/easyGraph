@@ -2,8 +2,8 @@ import networkx as nx
 import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
-from nodes import *
-from edges import *
+from .nodes import *
+from .edges import *
 
 init_notebook_mode(connected=True)
 

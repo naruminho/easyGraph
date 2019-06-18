@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='tareco',
-    version='0.1.1',
+    version='0.1.7',
     url='https://github.com/naruminho/tareco',
     license='MIT License',
     author='Narumi Abe and Melissa Forti',

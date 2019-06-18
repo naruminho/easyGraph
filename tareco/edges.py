@@ -1,5 +1,5 @@
 import networkx as nx
-from egfuncs import *
+from .egfuncs import *
 import plotly.graph_objs as go
 import copy
 
