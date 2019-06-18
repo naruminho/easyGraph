@@ -7,7 +7,7 @@ from edges import *
 
 init_notebook_mode(connected=True)
 
-class EasyGraph:
+class Tareco:
     def __init__(self, layout = 1, dim=2):
         self.G = nx.Graph()
         self.dim = dim

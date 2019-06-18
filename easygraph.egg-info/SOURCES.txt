@@ -1,8 +1,11 @@
+LICENSE.txt
 README.md
 setup.cfg
 setup.py
+easygraph/__init__.py
 easygraph/consts.py
 easygraph/easyGraph.py
+easygraph/easygraph.py
 easygraph/edges.py
 easygraph/egfuncs.py
 easygraph/nodes.py

@@ -1,11 +1,17 @@
-Metadata-Version: 1.0
+Metadata-Version: 1.1
 Name: easygraph
 Version: 0.1.1
 Summary: A tool for plotting graph networks
-Home-page: https://github.com/naruminho/easyGraph
+Home-page: https://github.com/naruminho/easygraph
 Author: Narumi Abe and Melissa Forti
 Author-email: mail.narumi@gmail.com
 License: MIT License
 Description: UNKNOWN
 Keywords: graph networks,plotly,networkx
 Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Visualization
